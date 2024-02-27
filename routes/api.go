@@ -3,6 +3,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"go_learn/pkg/config"
 	"net/http"
 )
 
@@ -16,6 +17,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			// JSON响应
 			c.JSON(http.StatusOK, gin.H{
 				"Hello": "World",
+				"port":  config.Get("app.port"),
 			})
 		})
 	}
