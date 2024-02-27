@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"errors"
 	"fmt"
+	"go_learn/app/models/user"
 	"go_learn/pkg/config"
 	"go_learn/pkg/database"
 	"gorm.io/driver/mysql"
@@ -18,7 +19,7 @@ func SetupDB() {
 	switch config.Get("database.connection") {
 	case "mysql":
 		// 构建DSN信息
-		dsn := fmt.Sprintf("%v:%v@tcp(%v:%v)%v?charset=%v&parseTime=True&mutiStatements=true=Local",
+		dsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=%v&parseTime=True&multiStatements=true&loc=Local",
 			config.Get("database.mysql.username"),
 			config.Get("database.mysql.password"),
 			config.Get("database.mysql.host"),
@@ -47,4 +48,6 @@ func SetupDB() {
 	// 设置每个链接的过期时间
 	database.SQLDB.SetConnMaxLifetime(time.Duration(config.GetInt("database.mysql.max_life_seconds")) * time.Second)
 
+	// 迁移用户表
+	database.DB.AutoMigrate(&user.User{})
 }

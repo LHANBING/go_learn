@@ -12,8 +12,8 @@ func init() {
 				"host":     config.Env("DB_HOST", "127.0.0.1"),
 				"port":     config.Env("DB_PORT", "3306"),
 				"database": config.Env("DB_DATABASE", "learn"),
-				"username": config.Env("DB_USERNAME", ""),
-				"password": config.Env("DB_PASSWORD", ""),
+				"username": config.Env("DB_USERNAME", "root"),
+				"password": config.Env("DB_PASSWORD", "123qwe"),
 				"charset":  "utf8mb4",
 
 				// 连接池配置

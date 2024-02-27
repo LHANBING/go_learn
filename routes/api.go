@@ -4,6 +4,7 @@ package routes
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go_learn/app/http/controller/api/v1/auth"
 	"go_learn/pkg/config"
 	"net/http"
 )
@@ -28,5 +29,12 @@ func RegisterAPIRoutes(r *gin.Engine) {
 					config.Get("database.mysql.charset")),
 			})
 		})
+
+		authGroup := v1.Group("/auth")
+		{
+			suc := new(auth.SignupController)
+			// 判断手机是否注册
+			authGroup.POST("/signup/phone/exist", suc.IsPhoneExist)
+		}
 	}
 }
