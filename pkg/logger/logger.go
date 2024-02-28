@@ -70,14 +70,14 @@ func getEncode() zapcore.Encoder {
 
 // customTimeEncoder 自定义友好的时间格式
 func customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.Format("2024-02-28 14:01:02"))
+	enc.AppendString(t.Format("2006-01-02 15:04:05"))
 }
 
 // 日志记录介质， os.Stdout 和 文件
 func getLogWriter(filename string, maxSize, maxBackup, maxAge int, compress bool, logType string) zapcore.WriteSyncer {
 	// 如果配置了按照日期记录日志的文件
 	if logType == "daily" {
-		logname := time.Now().Format("2024-02-28.log")
+		logname := time.Now().Format("2006-01-02.log")
 		filename = strings.ReplaceAll(filename, "logs.log", logname)
 	}
 	// 滚动日志 详见 config/log.go
@@ -136,7 +136,8 @@ func LogInfoIf(err error) {
 
 // Debug 调试日志，详尽的程序日志
 // 调用示例：
-//       logger.Debug("Database", zap.String("sql", sql))
+//
+//	logger.Debug("Database", zap.String("sql", sql))
 func Debug(moduleName string, fields ...zap.Field) {
 	Logger.Debug(moduleName, fields...)
 }
@@ -162,7 +163,8 @@ func Fatal(moduleName string, fields ...zap.Field) {
 }
 
 // DebugString 记录一条字符串类型的 debug 日志，调用示例：
-//         logger.DebugString("SMS", "短信内容", string(result.RawResponse))
+//
+//	logger.DebugString("SMS", "短信内容", string(result.RawResponse))
 func DebugString(moduleName, name, msg string) {
 	Logger.Debug(moduleName, zap.String(name, msg))
 }
@@ -184,7 +186,8 @@ func FatalString(moduleName, name, msg string) {
 }
 
 // DebugJSON 记录对象类型的 debug 日志，使用 json.Marshal 进行编码。调用示例：
-//         logger.DebugJSON("Auth", "读取登录用户", auth.CurrentUser())
+//
+//	logger.DebugJSON("Auth", "读取登录用户", auth.CurrentUser())
 func DebugJSON(moduleName, name string, value interface{}) {
 	Logger.Debug(moduleName, zap.String(name, jsonString(value)))
 }

@@ -4,7 +4,7 @@ package app
 import "go_learn/pkg/config"
 
 func IsLocal() bool {
-	return config.Get("app.env") == "Local"
+	return config.Get("app.env") == "local"
 }
 
 func IsProduction() bool {

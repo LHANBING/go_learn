@@ -3,6 +3,7 @@ package bootstrap
 
 import (
 	"github.com/gin-gonic/gin"
+	"go_learn/app/http/middleware"
 	"go_learn/routes"
 	"net/http"
 	"strings"
@@ -21,7 +22,8 @@ func registerGlobalMiddleWare(router *gin.Engine) {
 	// 初始化  Default 初始化 = New() + 注册中间件
 	//r := gin.Default()
 	router.Use(
-		gin.Logger(),
+		middleware.Logger(),
+		//gin.Logger(), //gin框架自带日志
 		gin.Recovery(),
 	)
 }
