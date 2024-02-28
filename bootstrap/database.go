@@ -19,6 +19,7 @@ func SetupDB() {
 	switch config.Get("database.connection") {
 	case "mysql":
 		// 构建DSN信息
+		// username:password@tcp(host:port)/database?charset=charset&parseTime=True&multiStatements=true&loc=Local
 		dsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=%v&parseTime=True&multiStatements=true&loc=Local",
 			config.Get("database.mysql.username"),
 			config.Get("database.mysql.password"),
