@@ -23,8 +23,9 @@ func registerGlobalMiddleWare(router *gin.Engine) {
 	//r := gin.Default()
 	router.Use(
 		middleware.Logger(),
+		middleware.Recovery(),
 		//gin.Logger(), //gin框架自带日志
-		gin.Recovery(),
+		//gin.Recovery(),
 	)
 }
 
