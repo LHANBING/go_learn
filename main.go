@@ -43,6 +43,11 @@ func main() {
 	// 初始化路由绑定
 	bootstrap.SetupRoute(router)
 
+	/*sms.NewSMS().Send("phone-number", sms.Message{
+		Template: config.GetString("sms.aliyun.template_code"),
+		Data:     map[string]string{"code": "6666"},
+	})*/
+
 	// 运行服务，指定端口
 	err := router.Run(":" + config.Get("app.port"))
 	if err != nil {
