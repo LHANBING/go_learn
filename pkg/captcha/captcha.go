@@ -23,7 +23,7 @@ var internalCaptcha *Captcha
 func NewCaptcha() *Captcha {
 	once.Do(func() {
 		// 初始化Captcha对象
-		internalCaptcha := &Captcha{}
+		internalCaptcha = &Captcha{}
 
 		// 使用全局 Redis 对象，并配置存储 Key 的前缀
 		store := RedisStore{
@@ -47,7 +47,7 @@ func NewCaptcha() *Captcha {
 }
 
 // GenerateCaptcha 生成图片验证码
-func (c *Captcha) GenerateCaptcha() (id string, b64s string, answer string, err error) {
+func (c *Captcha) GenerateCaptcha() (id, b64s, answer string, err error) {
 	return c.Base64Captcha.Generate()
 }
 
