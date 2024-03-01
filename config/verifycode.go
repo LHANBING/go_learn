@@ -17,7 +17,7 @@ func init() {
 			"debug_code": 521521,
 
 			// 方便本地和 API 自动测试
-			"debug_phone_prefix": "000",
+			"debug_phone_prefix": "151",
 			"debug_email_suffix": "@testing.com",
 		}
 	})
