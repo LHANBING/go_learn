@@ -43,6 +43,11 @@ func main() {
 	// 初始化路由绑定
 	bootstrap.SetupRoute(router)
 
+	// 测试路由
+	/*router.GET("/v1/test", middleware.GuestJWT(), func(c *gin.Context) {
+		c.String(http.StatusOK, "Hello guest !")
+	})*/
+
 	// 运行服务，指定端口
 	err := router.Run(":" + config.Get("app.port"))
 	if err != nil {
