@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/spf13/cobra"
 	"go_learn/app/cmd"
+	"go_learn/app/cmd/make"
 	"go_learn/bootstrap"
 	btsConfig "go_learn/config"
 	"go_learn/pkg/config"
 	"go_learn/pkg/console"
 	"os"
-
-	"github.com/spf13/cobra"
 )
 
 func init() {
@@ -44,6 +44,7 @@ func main() {
 		cmd.CmdServe,
 		cmd.CmdKey,
 		cmd.CmdPlay,
+		make.CmdMake,
 	)
 
 	// 配置默认运行 Web 服务
