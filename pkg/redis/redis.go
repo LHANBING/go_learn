@@ -3,10 +3,11 @@ package redis
 
 import (
 	"context"
-	"github.com/go-redis/redis/v8"
 	"go_learn/pkg/logger"
 	"sync"
 	"time"
+
+	"github.com/redis/go-redis/v9"
 )
 
 // RedisClient 服务
