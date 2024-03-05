@@ -3,7 +3,6 @@ package {{PackageName}}
 
 import (
 
-"go_learn/pkg/logger"
 "go_learn/pkg/database"
 )
 
