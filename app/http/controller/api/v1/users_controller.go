@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"go_learn/app/models/user"
 	"go_learn/pkg/auth"
 	"go_learn/pkg/response"
 
@@ -15,4 +16,10 @@ type UsersController struct {
 func (ctrl *UsersController) CurrentUser(c *gin.Context) {
 	userModel := auth.CurrentUser(c)
 	response.Data(c, userModel)
+}
+
+// Index 所有用户
+func (ctrl *UsersController) Index(c *gin.Context) {
+	data := user.ALl()
+	response.Data(c, data)
 }
