@@ -58,5 +58,11 @@ func RegisterAPIRoutes(r *gin.Engine) {
 		{
 			usersGroup.GET("", uc.Index)
 		}
+
+		cgc := new(controllers.CategoriesController)
+		cgcGroup := v1.Group("/category")
+		{
+			cgcGroup.POST("", middleware.AuthTWT(), cgc.Store)
+		}
 	}
 }
