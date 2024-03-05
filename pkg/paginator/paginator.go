@@ -3,14 +3,15 @@ package paginator
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/spf13/cast"
 	"go_learn/pkg/config"
 	"go_learn/pkg/logger"
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 	"math"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/spf13/cast"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // Paging 分页数据
@@ -56,6 +57,7 @@ type Paginator struct {
 //	       perPage,
 //	   )
 func Paginate(c *gin.Context, db *gorm.DB, data interface{}, baseURL string, perPage int) Paging {
+
 	// 初始化 Paginator 实例
 	p := &Paginator{
 		query: db,
@@ -70,6 +72,8 @@ func Paginate(c *gin.Context, db *gorm.DB, data interface{}, baseURL string, per
 							Offset(p.Offset).
 							Find(data).
 							Error
+
+	// 数据库出错
 	if err != nil {
 		logger.LogIf(err)
 		return Paging{}
@@ -80,17 +84,18 @@ func Paginate(c *gin.Context, db *gorm.DB, data interface{}, baseURL string, per
 		PerPage:     p.PerPage,
 		TotalPage:   p.TotalPage,
 		TotalCount:  p.TotalCount,
-		NextPageURL: "",
-		PrevPageURL: "",
+		NextPageURL: p.getNextPageURL(),
+		PrevPageURL: p.getPrevPageURL(),
 	}
 }
 
 // 初始化分页必须用到的属性，基于这些属性查询数据库
 func (p *Paginator) initProperties(perPage int, baseURL string) {
+
 	p.BaseURL = p.formatBaseURL(baseURL)
 	p.PerPage = p.getPerPage(perPage)
 
-	// 排序参数（控制器中已验证过这些参数，可放心使用）
+	// 排序参数（控制器中以验证过这些参数，可放心使用）
 	p.Order = p.ctx.DefaultQuery(config.Get("paging.url_query_order"), "asc")
 	p.Sort = p.ctx.DefaultQuery(config.Get("paging.url_query_sort"), "id")
 
@@ -100,22 +105,27 @@ func (p *Paginator) initProperties(perPage int, baseURL string) {
 	p.Offset = (p.Page - 1) * p.PerPage
 }
 
-// 兼容 URL 带与不带 `?` 的情况
-func (p *Paginator) formatBaseURL(baseURL string) string {
-	if strings.Contains(baseURL, "?") {
-		baseURL = baseURL + "&" + config.Get("paging.url_query_page") + "="
-	} else {
-		baseURL = baseURL + "?" + config.Get("paging.url_query_page") + "="
+func (p Paginator) getPerPage(perPage int) int {
+	// 优先使用请求 per_page 参数
+	queryPerpage := p.ctx.Query(config.Get("paging.url_query_per_page"))
+	if len(queryPerpage) > 0 {
+		perPage = cast.ToInt(queryPerpage)
 	}
-	return baseURL
+
+	// 没有传参，使用默认
+	if perPage <= 0 {
+		perPage = config.GetInt("paging.perpage")
+	}
+
+	return perPage
 }
 
 // getCurrentPage 返回当前页码
-func (p *Paginator) getCurrentPage() int {
+func (p Paginator) getCurrentPage() int {
 	// 优先取用户请求的 page
 	page := cast.ToInt(p.ctx.Query(config.Get("paging.url_query_page")))
 	if page <= 0 {
-		// 默认1
+		// 默认为 1
 		page = 1
 	}
 	// TotalPage 等于 0 ，意味着数据不够分页
@@ -132,13 +142,14 @@ func (p *Paginator) getCurrentPage() int {
 // getTotalCount 返回的是数据库里的条数
 func (p *Paginator) getTotalCount() int64 {
 	var count int64
-	if err := p.query.Count(&count); err != nil {
+	if err := p.query.Count(&count).Error; err != nil {
 		return 0
 	}
 	return count
 }
 
-func (p *Paginator) getTotalPage() int {
+// getTotalPage 计算总页数
+func (p Paginator) getTotalPage() int {
 	if p.TotalCount == 0 {
 		return 0
 	}
@@ -149,38 +160,18 @@ func (p *Paginator) getTotalPage() int {
 	return int(nums)
 }
 
-func (p *Paginator) getPerPage(perPage int) int {
-	// 优先使用请求 per_page 参数
-	queryPerPage := p.ctx.Query(config.Get("paging.url_per_page"))
-	if len(queryPerPage) > 0 {
-		perPage = cast.ToInt(queryPerPage)
+// 兼容 URL 带与不带 `?` 的情况
+func (p *Paginator) formatBaseURL(baseURL string) string {
+	if strings.Contains(baseURL, "?") {
+		baseURL = baseURL + "&" + config.Get("paging.url_query_page") + "="
+	} else {
+		baseURL = baseURL + "?" + config.Get("paging.url_query_page") + "="
 	}
-
-	// 没有传参，使用默认
-	if perPage <= 0 {
-		perPage = config.GetInt("paging.perpage")
-	}
-	return perPage
+	return baseURL
 }
 
-// getNextPageURL 返回下一页的链接
-func (p *Paginator) getNextPageURL() string {
-	if p.TotalPage > p.Page {
-		return p.getPageLink(p.Page + 1)
-	}
-	return ""
-}
-
-// getPrevPageURL 返回下一页的链接
-func (p *Paginator) getPrevPageURL() string {
-	if p.Page <= 1 || p.Page > p.TotalPage {
-		return ""
-	}
-	return p.getPageLink(p.Page + 1)
-}
-
-// getPageLink 拼接分页链接
-func (p *Paginator) getPageLink(page int) string {
+// 拼接分页链接
+func (p Paginator) getPageLink(page int) string {
 	return fmt.Sprintf("%v%v&%s=%s&%s=%s&%s=%v",
 		p.BaseURL,
 		page,
@@ -188,7 +179,23 @@ func (p *Paginator) getPageLink(page int) string {
 		p.Sort,
 		config.Get("paging.url_query_order"),
 		p.Order,
-		config.Get("paging,url_query_per_page"),
+		config.Get("paging.url_query_per_page"),
 		p.PerPage,
 	)
+}
+
+// getNextPageURL 返回下一页的链接
+func (p Paginator) getNextPageURL() string {
+	if p.TotalPage > p.Page {
+		return p.getPageLink(p.Page + 1)
+	}
+	return ""
+}
+
+// getPrevPageURL 返回下一页的链接
+func (p Paginator) getPrevPageURL() string {
+	if p.Page <= 1 || p.Page > p.TotalPage {
+		return ""
+	}
+	return p.getPageLink(p.Page - 1)
 }

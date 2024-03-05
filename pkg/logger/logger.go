@@ -189,6 +189,12 @@ func FatalString(moduleName, name, msg string) {
 //
 //	logger.DebugJSON("Auth", "读取登录用户", auth.CurrentUser())
 func DebugJSON(moduleName, name string, value interface{}) {
+	if len(moduleName) == 0 {
+		moduleName = "AAAA-----begin"
+	}
+	if len(name) == 0 {
+		moduleName = "AAAA-----end"
+	}
 	Logger.Debug(moduleName, zap.String(name, jsonString(value)))
 }
 
