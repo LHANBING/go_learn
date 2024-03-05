@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"go_learn/database/seeders"
 	"go_learn/pkg/console"
-	"go_learn/pkg/database/seeders"
 	"go_learn/pkg/seed"
 )
 
