@@ -3,7 +3,6 @@ package bootstrap
 import (
 	"errors"
 	"fmt"
-	"go_learn/app/models/user"
 	"go_learn/pkg/config"
 	"go_learn/pkg/database"
 	"go_learn/pkg/logger"
@@ -48,7 +47,4 @@ func SetupDB() {
 	database.SQLDB.SetMaxOpenConns(config.GetInt("database.mysql.max_idle_connections"))
 	// 设置每个链接的过期时间
 	database.SQLDB.SetConnMaxLifetime(time.Duration(config.GetInt("database.mysql.max_life_seconds")) * time.Second)
-
-	// 迁移用户表
-	database.DB.AutoMigrate(&user.User{})
 }
