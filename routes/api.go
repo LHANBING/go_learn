@@ -2,6 +2,7 @@
 package routes
 
 import (
+	controllers "go_learn/app/http/controller/api/v1"
 	"go_learn/app/http/controller/api/v1/auth"
 	"go_learn/app/http/middleware"
 
@@ -49,5 +50,9 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			authGroup.POST("/password-reset/using-phone", pwc.ResetByPhone)
 			authGroup.POST("/password-reset/using-email", pwc.ResetByEmail)
 		}
+
+		uc := new(controllers.UsersController)
+		// 获取当前用户
+		v1.GET("/user", middleware.AuthTWT(), uc.CurrentUser)
 	}
 }
