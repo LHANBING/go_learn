@@ -69,13 +69,19 @@ func RegisterAPIRoutes(r *gin.Engine) {
 		}
 
 		tpc := new(controllers.TopicsController)
-		tpcGroup := v1.Group("topic")
+		tpcGroup := v1.Group("/topic")
 		{
 			tpcGroup.GET("", tpc.Index)
 			tpcGroup.POST("", middleware.AuthTWT(), tpc.Store)
 			tpcGroup.PUT("/:id", middleware.AuthTWT(), tpc.Update)
 			tpcGroup.DELETE("/:id", middleware.AuthTWT(), tpc.Delete)
 			tpcGroup.GET("/:id", tpc.Show)
+		}
+
+		lsc := new(controllers.LinksController)
+		linksGroup := v1.Group("/link")
+		{
+			linksGroup.GET("", lsc.Index)
 		}
 	}
 }
