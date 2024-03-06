@@ -63,6 +63,7 @@ func (ctrl *TopicsController) Update(c *gin.Context) {
 		response.Abort500(c, "更新失败，请稍后尝试~")
 	}
 }
+
 func (ctrl *TopicsController) Delete(c *gin.Context) {
 	topicModel := topic.Get(c.Param("id"))
 	if topicModel.ID == 0 {
@@ -94,4 +95,13 @@ func (ctrl *TopicsController) Index(c *gin.Context) {
 		"data":  data,
 		"pager": pager,
 	})
+}
+
+func (ctrl *TopicsController) Show(c *gin.Context) {
+	topicModel := topic.Get(c.Param("id"))
+	if topicModel.ID == 0 {
+		response.Abort404(c)
+		return
+	}
+	response.Data(c, topicModel)
 }

@@ -2,10 +2,9 @@
 package topic
 
 import (
-	"go_learn/app/models/user"
-
 	"go_learn/app/models"
 	"go_learn/app/models/category"
+	"go_learn/app/models/user"
 	"go_learn/pkg/database"
 )
 
