@@ -71,6 +71,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 		tpc := new(controllers.TopicsController)
 		tpcGroup := v1.Group("topic")
 		{
+			tpcGroup.GET("", tpc.Index)
 			tpcGroup.POST("", middleware.AuthTWT(), tpc.Store)
 			tpcGroup.PUT("/:id", middleware.AuthTWT(), tpc.Update)
 			tpcGroup.DELETE("/:id", middleware.AuthTWT(), tpc.Delete)
