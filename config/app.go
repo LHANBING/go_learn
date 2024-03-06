@@ -20,6 +20,8 @@ func init() {
 			"url": config.Env("APP_URL", "http://localhost:8000"),
 			// 设置时区
 			"timezone": config.Env("TIMEZONE", "Asia/Shanghai"),
+			// API 域名，未设置的话所有 API URL 加 api 前缀，如 http://domain.com/api/v1/users
+			"api_domain": config.Env("API_DOMAIN", ""),
 		}
 	})
 }
