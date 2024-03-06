@@ -98,8 +98,8 @@ func (rds RedisClient) Del(keys ...string) bool {
 	return true
 }
 
-// FlushDb 清空当前 redis db 里的所有数据
-func (rds RedisClient) FlushDb() bool {
+// FlushDB 清空当前 redis db 里的所有数据
+func (rds RedisClient) FlushDB() bool {
 	if err := rds.Client.FlushDB(rds.Context).Err(); err != nil {
 		logger.ErrorString("Redis", "FlushDB", err.Error())
 		return false
