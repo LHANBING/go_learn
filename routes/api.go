@@ -58,6 +58,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 		{
 			usersGroup.GET("", uc.Index)
 			usersGroup.PUT("", middleware.AuthTWT(), uc.UpdateProfile)
+			usersGroup.PUT("/email", middleware.AuthTWT(), uc.UpdateEmail)
 		}
 
 		cgc := new(controllers.CategoriesController)
