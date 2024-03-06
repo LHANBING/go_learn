@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/thedevsaddam/govalidator"
 	"go_learn/app/requests/validators"
-	"go_learn/pkg/logger"
 )
 
 type SignupPhoneExistRequest struct {
@@ -88,7 +87,6 @@ func SignupUsingPhone(data interface{}, c *gin.Context) map[string][]string {
 			"digits:验证码长度必须为 6 位的数字",
 		},
 	}
-	logger.DebugJSON("test", "test", data)
 
 	errs := validate(data, rules, messages)
 	_data := data.(*SignupUsingPhoneRequest)

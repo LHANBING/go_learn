@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/thedevsaddam/govalidator"
 	"go_learn/pkg/database"
-	"go_learn/pkg/logger"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -103,7 +102,6 @@ func init() {
 
 		// 用户请求过来的数据
 		requestValue := value.(string)
-		logger.DebugJSON("", "", value)
 
 		// 查数据库
 		var count int64
