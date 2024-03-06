@@ -24,6 +24,7 @@ func registerGlobalMiddleWare(router *gin.Engine) {
 	router.Use(
 		middleware.Logger(),
 		middleware.Recovery(),
+		//middleware.ForceUA(),
 		//gin.Logger(), //gin框架自带日志
 		//gin.Recovery(),
 	)
