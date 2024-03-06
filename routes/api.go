@@ -65,6 +65,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			cgcGroup.GET("", cgc.Index)
 			cgcGroup.POST("", middleware.AuthTWT(), cgc.Store)
 			cgcGroup.PUT("/:id", middleware.AuthTWT(), cgc.Update)
+			cgcGroup.DELETE("/:id", middleware.AuthTWT(), cgc.Delete)
 		}
 	}
 }
