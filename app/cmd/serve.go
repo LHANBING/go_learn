@@ -30,6 +30,9 @@ func runWeb(cmd *cobra.Command, args []string) {
 	// 初始化路由绑定
 	bootstrap.SetupRoute(router)
 
+	// 设置静态文件服务
+	router.Static("/public", "./public")
+
 	// 运行服务器
 	err := router.Run(":" + config.Get("app.port"))
 	if err != nil {
