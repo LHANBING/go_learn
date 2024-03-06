@@ -4,6 +4,8 @@ import (
 	"go_learn/app/models/user"
 	"go_learn/app/requests"
 	"go_learn/pkg/auth"
+	"go_learn/pkg/config"
+	"go_learn/pkg/file"
 	"go_learn/pkg/response"
 
 	"github.com/gin-gonic/gin"
@@ -104,4 +106,23 @@ func (ctrl *UsersController) UpdatePassword(c *gin.Context) {
 		// 弃用 jwt，可选择使用黑名单方案将已有 jwt 加入黑名单
 		response.Success(c)
 	}
+}
+
+func (ctrl *UsersController) UpdateAvatar(c *gin.Context) {
+	request := requests.UserUpdateAvatarRequest{}
+	if ok := requests.Validate(c, &request, requests.UserUpdateAvatar); !ok {
+		return
+	}
+
+	avatar, err := file.SaveUploadAvatar(c, request.Avatar)
+	if err != nil {
+		response.Abort500(c, "上传头像失败，请稍后尝试~")
+		return
+	}
+
+	currentUser := auth.CurrentUser(c)
+	currentUser.Avatar = config.GetString("app.url") + avatar
+	currentUser.Save()
+
+	response.Data(c, currentUser)
 }
