@@ -85,3 +85,23 @@ func (ctrl *UsersController) UpdatePhone(c *gin.Context) {
 		response.Abort500(c, "更新失败，请稍后尝试~")
 	}
 }
+
+func (ctrl *UsersController) UpdatePassword(c *gin.Context) {
+	request := requests.UserUpdatePasswordRequest{}
+	if ok := requests.Validate(c, &request, requests.UserUpdatePassword); !ok {
+		return
+	}
+	currentUser := auth.CurrentUser(c)
+	// 验证原始密码
+	_, err := auth.Attempt(currentUser.Name, request.Password)
+	if err != nil {
+		// 失败提示
+		response.Unauthorized(c, "原始密码不对")
+	} else {
+		// 更新密码为新密码
+		currentUser.Password = request.NewPassword
+		currentUser.Save()
+		// 弃用 jwt，可选择使用黑名单方案将已有 jwt 加入黑名单
+		response.Success(c)
+	}
+}
